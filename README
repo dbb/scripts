@@ -1,19 +1,19 @@
 dbbolton's scripts
 
-name			type	description
+name                  type    description
 ----------------------------------------------------------------------------
-colortheme		sh	shows terminal colors
-cpu-gov			perl	sets CPU governor based on acpi
-dwm-status		perl	sets the dwm "status bar"
-gather			perl	gathers scripts from my bin
-ipad			perl	shows interface/router addresses
-kernel-deb		sh	run after "make menuconfig"
-media-sync		perl	eases rsyn procedure
-percent-error		perl	calculates % error from user input
-scrot-info		sh	prints some info and calls scrot
-standard-deviation	perl	calculates SD from user input
-sysstats		perl	prints various system stats
-tint2theme		perl	tint2 theme switcher
-xdeftheme		perl	Xdefaults switcher
+colortheme            sh      shows terminal colors
+cpu-gov               perl    sets CPU governor based on acpi
+dwm-status            perl    sets the dwm "status bar"
+gather                perl    gathers scripts from my bin
+ipad                  perl    shows interface/router addresses
+kernel-deb            sh      run after "make menuconfig"
+media-sync            perl    eases rsyn procedure
+percent-error         perl    calculates % error from user input
+scrot-info            sh      prints some info and calls scrot
+standard-deviation    perl    calculates SD from user input
+sysstats              perl    prints various system stats
+tint2theme            perl    tint2 theme switcher
+xdeftheme             perl    Xdefaults switcher
 
 
