@@ -1,0 +1,102 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use File::Copy;
+
+# dbbolton
+# danielbarrettbolton@gmail.com
+
+# Path to your tint2rc files
+my $path = "$ENV{HOME}/.config/tint2/";
+
+# The tint2rc location
+my $rcfile = "$ENV{HOME}/.config/tint2/tint2rc";
+my $backup = "$ENV{HOME}/.config/tint2/tint2rc_backup";;
+
+# tint2's process ID, if running
+my $tintpid = `pidof tint2`;
+
+# Find available files
+opendir(my $dh, $path) || die "can't opendir $path: $!";
+my @files = sort(readdir($dh));
+
+my $i = 0;
+print "Files found: \n";
+foreach (@files) {
+  unless (/^\.$/ || /^\.\.$/) {
+    print "$i\t$_\n";
+    $i += 1;
+}
+}
+
+# Ask which theme file to use
+my $newtheme = '';
+sub getnew {
+  print "\nEnter theme number: ";
+  my $n = <>;
+  chomp($n);
+  $n += 2;
+  return $n;
+}
+
+# Make sure the name is ok
+my $usenew = "n";
+sub checkfile {
+ if (-e "$path/$newtheme" && -r "$path/$newtheme" ) {
+    print "File is OK.\n";
+ }
+else {
+    print "\nEither the specified file does not exist in the theme directory, or you do 
+not have access to it.\n";
+    $newtheme = getnew();
+    checkfile();
+ }
+}
+#$checked_theme = $newtheme;
+
+sub verify {
+    print "Really use theme \"$newtheme\" ? (y/n) ";
+    $usenew = <>;
+    chomp($usenew);
+    if ($usenew eq "y" || $usenew eq "Y") {
+	writefile();
+    }
+    elsif ($usenew eq "n" || $usenew eq "N") {
+	print "Aborting.\n";
+    }
+    else {
+	print "Invalid response. Type 'y' or 'n'.\n";
+	verify();
+    }
+}
+
+sub starttint {
+  if ($tintpid) {
+    system "kill $tintpid";
+  }
+
+  defined(my $pid = fork) || die "Cannot fork: $!";
+  unless ($pid) {
+    close(STDIN) or die "Can't close STDIN: $!\n";
+    close(STDOUT) or die "Can't close STDOUT: $!\n";
+    close(STDERR) or die "Can't close STDERR: $!\n";
+    exec "tint2 -c $rcfile";
+    exit 0;
+  }
+}
+
+sub writefile {
+  if (-e $rcfile) {
+      print "Backing up tint2rc to \n  $backup ...\n";
+      move($rcfile, $backup) || die "Error moving: $!";
+  }
+  print "Writing $newtheme to tint2rc ...\n";
+  copy("$path/$newtheme", $rcfile) || die "File cannot be copied: $!";
+  print "(Re)starting tint2 ... \n";
+  starttint();
+}
+
+my $index = getnew();
+$newtheme = $files[$index];
+checkfile();
+verify();

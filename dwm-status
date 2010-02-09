@@ -1,0 +1,34 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use Date::Format;
+
+# dbbolton
+# danielbarrettbolton@gmail.com
+
+while (1) {
+# Current Load #############################################################
+my $load = (split ' ', `uptime`)[-2];
+chop($load);
+
+# Active Memory ############################################################
+my $memmb = 0;
+open(my $meminfo,  "<",  "/proc/meminfo") or die "Can't open /proc/meminfo: $!";
+my @memlines = <$meminfo>;
+foreach (@memlines) {
+    if (/^Active:/) {
+        my $memkb = (split(/ /, $_))[-2];
+        $memmb = sprintf("%.0f", ($memkb/1024));       
+    }
+}
+
+# Time #####################################################################
+my $zeit = time2str("%R", time);
+
+# All together now #########################################################
+my $status = "$load | $memmb MB | $zeit ";
+
+system("xsetroot -name \"$status\"");
+system('sleep 3s');
+}
+
