@@ -2,18 +2,25 @@ dbbolton's scripts
 
 name                  type    description
 ----------------------------------------------------------------------------
+apt-carbon.pl         perl    generates a shell script to replicate your
+                              debian system, then uploads it to a pastebin
 colortheme            sh      shows terminal colors
-cpu-gov               perl    sets CPU governor based on acpi
-dwm-status            perl    sets the dwm "status bar"
+cpu-gov               perl    sets CPU governor to "performance" if you are
+                              running on AC power, and "powersave" if you
+                              are on battery power
+dwm-status            perl    sets the dwm "status bar"; add this script to
+                              your $HOME/.xinitrc before dwm
 gather                perl    gathers scripts from my bin
-ipad                  perl    shows interface/router addresses
-kernel-deb            sh      run after "make menuconfig"
+ipad                  perl    shows your interface's IP address, and your
+                              router's address
+kernel-deb            sh      run after "make menuconfig" to build debian 
+                              kernel packages
 media-sync            perl    eases rsyn procedure
 percent-error         perl    calculates % error from user input
 scrot-info            sh      prints some info and calls scrot
 standard-deviation    perl    calculates SD from user input
-sysstats              perl    prints various system stats
+sysstats              perl    prints various system stats; helpful for
+                              constructing a screen status
 tint2theme            perl    tint2 theme switcher
 xdeftheme             perl    Xdefaults switcher
-
 
