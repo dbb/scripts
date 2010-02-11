@@ -22,5 +22,8 @@ standard-deviation    perl    calculates SD from user input
 sysstats              perl    prints various system stats; helpful for
                               constructing a screen status
 tint2theme            perl    tint2 theme switcher
+word-search           perl    takes the first command line argument as
+                              a pattern and searches your dictionary
+                              for it
 xdeftheme             perl    Xdefaults switcher
 

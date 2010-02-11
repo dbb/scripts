@@ -1,0 +1,24 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use autodie;
+
+my $dictionary = "/usr/share/dict/american-english";
+
+my $re = $ARGV[0] // '^$';
+open my $fh, '<', $dictionary;
+
+my $line = 1;
+my $matches = 0;
+
+print "\n";
+while (<$fh>) {
+   if ( /$re/ ) {
+     $matches++;
+    print "\e[0;32m$line\e[0m: $_";
+   }
+  $line++;
+ }
+
+print "\n$matches match found.\n\n" if $matches == 1;
+print "\n$matches matches found.\n\n" if $matches != 1;
