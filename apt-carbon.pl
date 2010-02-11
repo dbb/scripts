@@ -35,8 +35,9 @@ elsif (! (`apt-cache policy pastebinit` =~ /\(none\)/)) {
 	print "Using pastebinit...\n";
 }
 else {
-	print "Automatic upload failed: Neither curl nor pastebinit is installed.".
-		  "Your script is located at ./apt-carbon.sh";
+	print "Automatic upload failed: Neither curl nor pastebinit is installed.\n".
+		  "Your script is located at ./apt-carbon.sh\n";
 }
 
+system "chmod 744 apt-carbon.sh";
 close $out;
