@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use autodie;
-use List::MoreUtils qw(natatime);
+use List::MoreUtils qw(natatime); # debian: liblist-moreutils-perl
 
 # dbbolton
 # danielbarrettbolton@gmail.com
