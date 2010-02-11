@@ -1,7 +1,9 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 use strict;
-use warnings;
 use autodie;
+
+# dbbolton
+# danielbarrettbolton@gmail.com
 
 my $dictionary = "/usr/share/dict/american-english";
 
@@ -13,12 +15,12 @@ my $matches = 0;
 
 print "\n";
 while (<$fh>) {
-   if ( /$re/ ) {
-     $matches++;
-    print "\e[0;32m$line\e[0m: $_";
-   }
-  $line++;
- }
+    if ( /$re/ ) {
+        print "\e[0;32m$line\e[0m: $_";
+        $matches++;
+    }
+    $line++;
+}
 
 print "\n$matches match found.\n\n" if $matches == 1;
 print "\n$matches matches found.\n\n" if $matches != 1;
