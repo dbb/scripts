@@ -14,6 +14,7 @@ sub act {
 			print $mb . "MB";;
 		}
 	}
+	close $in;
 }
 
 sub bat {
@@ -37,7 +38,8 @@ sub help {
 }
 
 sub load {
-	chop($_ = (split " ", `uptime`)[7]);
+ 	chop($_ = (split " ", `uptime`)[-3]);
+#	$_ = (split ':', `uptime`)[-1];
 	print;
 }
 
