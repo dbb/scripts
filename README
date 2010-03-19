@@ -17,6 +17,7 @@ kernel-deb            sh      run after "make menuconfig" to build debian
                               kernel packages
 media-sync            perl    eases rsyn procedure
 percent-error         perl    calculates % error from user input
+plcalc                perl    simple command line calculator
 scrot-info            sh      prints some info and calls scrot
 standard-deviation    perl    calculates SD from user input
 sysstats              perl    prints various system stats; helpful for
