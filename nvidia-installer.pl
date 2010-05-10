@@ -15,13 +15,13 @@ my $cache = AptPkg::Cache->new;
 # check to see if the script is run as root
 unless ( $ENV{USER} eq "root" ) {
     print "Must be root; aborting.\n";
-#   exit;
+    exit;
 }
 
 # check to see if Xorg is running
 if ( `ps -e` =~ /Xorg/ ) {
     print "Xorg running; aborting.\n";
-#   exit;
+    exit;
 }
 
 # remove the nvidia module
