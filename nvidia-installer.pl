@@ -171,7 +171,7 @@ sub apin {
             aptitude install nvidia-kernel-source=$v && \
             m-a a-i nvidia-kernel-source && \
             aptitude install nvidia-glx=$v nvidia-glx-ia32=$v libvdpau1 \
-            nvidia-vdpau-driver=$v nvidia-vdpau-driver-ia32=$v"
+            nvidia-vdpau-driver=$v nvidia-vdpau-driver-ia32=$v";
 
 }
 
@@ -180,5 +180,5 @@ sub apin {
 
 # need one argument
 else {
-    print "Specify a method: 'deb' or 'nv'.";
+    print "Specify a method: 'deb' or 'nv'.\n";
 }
