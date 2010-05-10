@@ -1,13 +1,9 @@
 #!/usr/bin/perl
-use strict;
-use warnings;
-
 use autodie;
 use AptPkg::Cache; # libapt-pkg-perl
 
 # dbbolton
 # danielbarrettbolton@gmail.com
-
 
 # setting up a cache to be used later
 my $cache = AptPkg::Cache->new;
