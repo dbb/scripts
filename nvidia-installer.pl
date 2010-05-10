@@ -1,9 +1,13 @@
 #!/usr/bin/perl
+use strict;
+use warnings;
+
 use autodie;
 use AptPkg::Cache; # libapt-pkg-perl
 
 # dbbolton
 # danielbarrettbolton@gmail.com
+
 
 # setting up a cache to be used later
 my $cache = AptPkg::Cache->new;
@@ -11,19 +15,28 @@ my $cache = AptPkg::Cache->new;
 # check to see if the script is run as root
 unless ( $ENV{USER} eq "root" ) {
     print "Must be root; aborting.\n";
-    exit;
+#   exit;
 }
 
 # check to see if Xorg is running
 if ( `ps -e` =~ /Xorg/ ) {
     print "Xorg running; aborting.\n";
-    exit;
+#   exit;
 }
 
 # remove the nvidia module
 print "Unloading the 'nvidia' module...\n";
 system "rmmod -v nvidia";
 print "\n";
+
+# check arch
+my $arch;
+if ( `uname -m` =~ /x86_64/ ) {
+    $arch = "x86_64";
+}
+elsif ( `uname -m` =~ /i[36]86/ ) {
+    $arch = "x86";
+}
 
 # Nvidia's verion ###########################################################
 if ( $ARGV[0] =~ /nv/ ) {
@@ -49,7 +62,7 @@ my $version = '';
 
 # make a list of potential installers
 foreach (@files) {
-    if ( /NVIDIA-Linux-x86_64-(\d{3}\.\d{2}\.\d{2})-pkg2\.run/ ) {
+    if ( /NVIDIA-Linux-$arch-(\d{3}\.\d{2}\.\d{2})-pkg2\.run/ ) {
         push @versions, $1;
     }
 }
