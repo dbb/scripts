@@ -9,7 +9,7 @@ use File::Copy;
 # s/[\ !"#\$%&'*+,:;?@\\]/_/g;
 # s/[()<=>\[\]^`{|}~]/-/g;
 
-my $path = "$ENV{PWD}";
+my $path = $ARGV[0] // $ENV{PWD};
 opendir( my $dh, $path );
 my @files = sort( readdir($dh) );
 
