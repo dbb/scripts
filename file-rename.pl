@@ -43,7 +43,8 @@ foreach (@files) {
 
 sub fixname {
     my ($name) = @_;
-    $name =~ s/[\ !"#\$%&'*+,:;?@\\]/_/g;
+    $name =~ s/[\ !"#\$%'*+,:;?@\\]/_/g;
     $name =~ s/[()<=>\[\]^`{|}~]/-/g;
+    $name =~ s/&/and/g;
     return $name;
 }
