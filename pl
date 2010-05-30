@@ -19,6 +19,6 @@ for (@args) {
     $argstr .= " -$_" unless /^$/;
 }
 
-my $command = "perl" . $argstr . " -i$suf -e '$code'" . $post;
+my $command = "perl" . $argstr . " -i$suf -e '$code' " . $post;
 print "\n$command\n\n";
 system $command;
