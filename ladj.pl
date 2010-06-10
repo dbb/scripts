@@ -3,18 +3,20 @@ use strict;
 use warnings;
 use autodie;
 
-# This script generates a Wiktionary article (in English) for a Latin
-# adjective. It prints the output to a file, launches a terminal
-# emulator, prints the contents of the output file, and pipes that printing
-# to a pager. You can edit this behavior at line ??.
+# dbbolton (Attys on Wiktionary)
+# danielbarrettbolton at gmail
 
+# This script generates a Wiktionary article (in English) for a Latin
+# adjective. It prints the output to a file, prints the contents of the 
+# output file, and opens that file with a pager. 
+# You can edit this behavior around line 149.
 
 my $term = $ENV{TERM} // 'xterm';
 my $geometry = "80x50";
 my $pager = $ENV{PAGER} // 'less';
 
 # Directory to save output file(s)
-my $dir= $ENV{PWD};
+my $dir = $ENV{PWD};
 
 # set this to 1 if you want a unique output filename every time (i.e. you
 # want to keep backup copies of the output)
