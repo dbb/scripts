@@ -1,0 +1,21 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+# dbbolton
+# danielbarrettbolton at ģṁāīł
+
+my $string = "word http://example.org/File:image.png word
+newline     tabs";
+
+my @words = split /[\s]/, $string;
+
+for (@words) {
+    if ( m#^(http://|www\.\S+$)# ) {
+        print "\nurl: $_\n";
+        print "html: <a href=\"$_\" target=\"_blank\">$_</a>\n\n";
+    }
+    else {
+        print "'$_' probably is not a URL.\n";
+    }
+}
