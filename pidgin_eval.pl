@@ -1,10 +1,6 @@
 use Purple;
 
 # based on flip.pl by sadrul
-# move to $HOME/.purple/plugins
-#
-# Usage: /eval <command>
-
 
 %PLUGIN_INFO = (
 	perl_api_version => 2,
