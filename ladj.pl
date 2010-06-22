@@ -3,20 +3,18 @@ use strict;
 use warnings;
 use autodie;
 
-# dbbolton (Attys on Wiktionary)
-# danielbarrettbolton at gmail
-
 # This script generates a Wiktionary article (in English) for a Latin
-# adjective. It prints the output to a file, prints the contents of the 
-# output file, and opens that file with a pager. 
-# You can edit this behavior around line 149.
+# adjective. It prints the output to a file, launches a terminal
+# emulator, prints the contents of the output file, and pipes that printing
+# to a pager. You can edit this behavior at line ??.
 
-my $term = $ENV{TERM} // 'xterm';
+
+my $term = 'xterm';
 my $geometry = "80x50";
 my $pager = $ENV{PAGER} // 'less';
 
 # Directory to save output file(s)
-my $dir = $ENV{PWD};
+my $dir= $ENV{PWD};
 
 # set this to 1 if you want a unique output filename every time (i.e. you
 # want to keep backup copies of the output)
@@ -31,7 +29,8 @@ my $ref_string = 'Langenscheidt Pocket Latin Dictionary. Berlin: Langenschedit, 
 print "Available templates:
 1.\tfirst/second declension\n";
 print "Choice: ";
-chomp( my $choice = <STDIN> );
+#chomp( my $choice = <STDIN> );
+my $choice = 1;
 unless  ( $choice >= 1 and $choice <= 1 ) {
     print "Invalid choice; exiting.\n";
     exit;
@@ -46,18 +45,8 @@ sub ladj_1_2 {
         print "Stem has no word characters; exiting.";
         exit;
     }
-    my $stem_mac = $stem;
-    my $stem_nomac = $stem;
-    if ( $stem_mac =~ /-/ ) {
-        $stem_mac =~ s/A-/Ā/g;
-        $stem_mac =~ s/a-/ā/g;
-        $stem_mac =~ s/e-/ē/g;
-        $stem_mac =~ s/i-/ī/g;
-        $stem_mac =~ s/o-/ō/g;
-        $stem_mac =~ s/u-/ū/g;
-        $stem_mac =~ s/y-/ȳ/g;
-    }
-    $stem_nomac =~ s/-//g;
+    my $stem_mac = &add_mac($stem);
+    my $stem_nomac = &de_mac($stem);
     print "Stem with macrons:    $stem_mac\n";
     print "Stem without macrons: $stem_nomac\n";
     print "Is this acceptable? (Y/n) ";
@@ -88,7 +77,7 @@ sub ladj_1_2 {
             my @alt_spel = <>;
                 print $out "\n=== Alternative spellings ===\n"; 
                 for (@alt_spel) {
-                    print $out "\n$_" unless /^\s*$/;
+                    print $out "$_\n" unless /^\s*$/;
             }
     }
 
@@ -96,35 +85,41 @@ sub ladj_1_2 {
         print "Add a {{term|TARGET|DISPLAY|MEANING|lang=la}} etymology? (y/N) ";
         chomp(my $add_etm = <STDIN>);
         if ( $add_etm =~ /[y1]/i ) {
-            print $out "\n\n=== Etymology ===\n".
-                    "\n{{la-adj-1&2|$stem_mac" . "us|$stem_nomac" . "a|$stem_mac" . "a|$stem_nomac" . "um|$stem_mac" . "um}}\n";
-            print "Enter target: ";
-            chomp(my $etm_targ = <STDIN>);
-            print "Enter display: ";
-            chomp(my $etm_disp = <STDIN>);
+#                        print "Enter target: ";
+#            chomp(my $etm_targ = <STDIN>);
+#            print "Enter display: ";
+#            chomp(my $etm_disp = <STDIN>);
+            print "Enter origin (macrons as before):\n";
+            chomp( my $origin = <STDIN> );
+            my $etm_targ = &de_mac($origin);
+            my $etm_disp = &add_mac($origin);
             print "Enter explanation: ";
             chomp(my $etm_exp = <STDIN>);
             print "Enter anything (or nothing) to add after {{term}}: ";
             chomp(my $etm_ext = <STDIN>);
-            print $out "\nFrom {{term|$etm_targ|$etm_disp|$etm_exp|lang=la}}$etm_ext\n";
+            print $out "\n=== Etymology ===" .
+                       "\nFrom {{term|$etm_targ|$etm_disp|$etm_exp|lang=la}}$etm_ext\n";
         }
 
 # Adjective
-        print $out "\n\n=== Adjective ===\n";
+        print $out "\n=== Adjective ===\n".
+                   "{{la-adj-1&2|$stem_mac" . "us|$stem_nomac" . "a|$stem_mac" . 
+                   "a|$stem_nomac" . "um|$stem_mac" . "um}}\n";
         print "Enter the definitions, separated by <RETURN>, followed by CTRL+D:\n";
         my @defs = <>;
         for (@defs) {
+            chomp;
             print $out "\n# $_";
         }
 
 # Inflection
         print $out "\n\n==== Inflection ====\n".
-        "\n{{la-decl-1&2|$stem_mac}}\n\n";
+        "{{la-decl-1&2|$stem_mac}}\n";
 
 # Reference
         if ($ref_string) {
-            print $out "\n=== Reference ===\n".
-                       "\n* $ref_string\n\n";
+            print $out "\n=== References ===\n".
+                       "* $ref_string\n\n";
         }
 
 # Fin
@@ -150,3 +145,20 @@ sub disp_out {
   }
 }
 
+sub add_mac {
+    my ( $in_string ) = @_;
+    $in_string =~ s/A-/Ā/g;
+    $in_string =~ s/a-/ā/g;
+    $in_string =~ s/e-/ē/g;
+    $in_string =~ s/i-/ī/g;
+    $in_string =~ s/o-/ō/g;
+    $in_string =~ s/u-/ū/g;
+    $in_string =~ s/y-/ȳ/g;
+    return $in_string;
+}
+
+sub de_mac {
+    my ( $in_string ) = @_;
+    $in_string =~ s/-//g;
+    return $in_string;
+}
