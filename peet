@@ -62,8 +62,8 @@ for ( my $argc = 0; $argc <= @ARGV; $argc++) {
 # Optionally provide default login info here
 
 sub login {
-    $user = 'USERNAME_LINE_61' unless $user;
-    $password = 'PASSWORD_LINE_62' unless $password;
+    $user = 'USERNAME_LINE_65' unless $user;
+    $password = 'PASSWORD_LINE_66' unless $password;
 
     $nt = Net::Twitter->new(
     traits   => [qw/API::REST/],
