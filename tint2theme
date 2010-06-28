@@ -1,11 +1,10 @@
 #!/usr/bin/env perl
 use strict;
-use warnings;
 use autodie;
 use File::Copy;
 
 # dbbolton
-# danielbarrettbolton@gmail.com
+# danielbarrettbolton at gmail
 
 # Path to your tint2rc files
 my $path = "$ENV{HOME}/.config/tint2/";
@@ -70,7 +69,7 @@ sub verify {
     if ( $usenew =~ /[y1]/i ) {
         writefile();
     }
-    elsif ($usenew =~ /[n0]/i ) {
+    elsif ( $usenew =~ /[n0]/i ) {
         print "Aborting.\n";
         exit;
     }
@@ -87,9 +86,9 @@ sub starttint {
 
     defined( my $pid = fork );
         unless ( $pid ) {
-        close( STDIN ) or die "Can't close STDIN: $!\n";
-        close( STDOUT ) or die "Can't close STDOUT: $!\n";
-        close( STDERR ) or die "Can't close STDERR: $!\n";
+        close( STDIN );
+        close( STDOUT);
+        close( STDERR);
         exec "tint2 -c $rcfile";
         exit 0;
     }
@@ -106,7 +105,7 @@ sub writefile {
     print "(Re)starting tint2 ... \n";
     }
     else {
-        print "Not overwriting tint2rc with tint2rc";
+        print "Not overwriting tint2rc with '$newtheme'";
     }
     starttint();
 }
@@ -115,3 +114,4 @@ my $index = getnew();
 $newtheme = $files[$index];
 checkfile();
 verify();
+
