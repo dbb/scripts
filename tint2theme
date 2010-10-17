@@ -1,13 +1,14 @@
 #!/usr/bin/env perl
 use strict;
-use warnings;
+use autodie;
 use File::Copy;
 
 # dbbolton
-# danielbarrettbolton@gmail.com
+# danielbarrettbolton at gmail
 
 # Path to your tint2rc files
 my $path = "$ENV{HOME}/.config/tint2/";
+chdir $path;
 
 # The tint2rc location
 my $rcfile = "$ENV{HOME}/.config/tint2/tint2rc";
@@ -17,30 +18,39 @@ my $backup = "$ENV{HOME}/.config/tint2/tint2rc_backup";;
 my $tintpid = `pidof tint2`;
 
 # Find available files
-opendir(my $dh, $path) || die "can't opendir $path: $!";
+opendir(my $dh, $path);
 my @files = sort(readdir($dh));
 
 my $i = 0;
-print "Files found: \n";
-foreach (@files) {
-  unless (/^\.$/ || /^\.\.$/) {
-    print "$i\t$_\n";
-    $i += 1;
+my $del = 0;
+for ( @files ) {
+    unless ( -f ) {
+        delete $files[$i];
+        $del++;
+    }
+    $i++;
 }
+
+$i=0;
+print "Available config files: \n";
+for ( @files ) {
+    if ( $_ ) {
+        print "$i\t$_\n";
+        $i++;
+    }
 }
 
 # Ask which theme file to use
-my $newtheme = '';
+my $newtheme;
 sub getnew {
   print "\nEnter theme number: ";
-  my $n = <>;
-  chomp($n);
-  $n += 2;
+  chomp( my $n = <> );
+  $n += $del;
   return $n;
 }
 
 # Make sure the name is ok
-my $usenew = "n";
+my $usenew;
 sub checkfile {
  if (-e "$path/$newtheme" && -r "$path/$newtheme" ) {
     print "File is OK.\n";
@@ -52,51 +62,56 @@ not have access to it.\n";
     checkfile();
  }
 }
-#$checked_theme = $newtheme;
 
 sub verify {
     print "Really use theme \"$newtheme\" ? (y/n) ";
-    $usenew = <>;
-    chomp($usenew);
-    if ($usenew eq "y" || $usenew eq "Y") {
-	writefile();
+    chomp( $usenew = <> );
+    if ( $usenew =~ /[y1]/i ) {
+        writefile();
     }
-    elsif ($usenew eq "n" || $usenew eq "N") {
-	print "Aborting.\n";
+    elsif ( $usenew =~ /[n0]/i ) {
+        print "Aborting.\n";
+        exit;
     }
     else {
-	print "Invalid response. Type 'y' or 'n'.\n";
-	verify();
+        print "Invalid response. Type 'y' or 'n'.\n";
+        verify();
     }
 }
 
 sub starttint {
-  if ($tintpid) {
-    system "kill $tintpid";
-  }
+    if ( $tintpid ) {
+        system "kill $tintpid";
+}
 
-  defined(my $pid = fork) || die "Cannot fork: $!";
-  unless ($pid) {
-    close(STDIN) or die "Can't close STDIN: $!\n";
-    close(STDOUT) or die "Can't close STDOUT: $!\n";
-    close(STDERR) or die "Can't close STDERR: $!\n";
-    exec "tint2 -c $rcfile";
-    exit 0;
-  }
+    defined( my $pid = fork );
+        unless ( $pid ) {
+        close( STDIN );
+        close( STDOUT);
+        close( STDERR);
+        exec "tint2 -c $rcfile";
+        exit 0;
+    }
 }
 
 sub writefile {
-  if (-e $rcfile) {
-      print "Backing up tint2rc to \n  $backup ...\n";
-      move($rcfile, $backup) || die "Error moving: $!";
-  }
-  print "Writing $newtheme to tint2rc ...\n";
-  copy("$path/$newtheme", $rcfile) || die "File cannot be copied: $!";
-  print "(Re)starting tint2 ... \n";
-  starttint();
+    unless ( $newtheme eq "tint2rc" ) {
+        if ( -e $rcfile ) {
+            print "Backing up tint2rc to \n  '$backup' ...\n";
+            move( $rcfile, $backup );
+        }
+        print "Writing '$newtheme' to '$rcfile' ...\n";
+        copy( "$path/$newtheme", $rcfile );
+    print "(Re)starting tint2 ... \n";
+    }
+    else {
+        print "Not overwriting tint2rc with '$newtheme'";
+    }
+    starttint();
 }
 
 my $index = getnew();
 $newtheme = $files[$index];
 checkfile();
 verify();
+
