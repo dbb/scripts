@@ -2,10 +2,6 @@
 use strict;
 use warnings;
 
-# github.com/dbbolton
-#
-# I use this script to install packages through aptitude as a normal user.
-
 my $args     = '-P ';
 my $packages = '';
 my $pattern  = '';
@@ -18,7 +14,7 @@ for (@ARGV) {
     elsif ( /^[~?]/ ) {
         $pattern .= $_;
     }
-    elsif ( /^\w+$/ ) {
+    elsif ( /^[\w-.]+$/ ) {
         $packages .= $_ . ' ';
     }
 
