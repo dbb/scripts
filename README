@@ -1,30 +1,98 @@
 dbbolton's scripts
 
-name                  type    description
+name                    type    description
 ----------------------------------------------------------------------------
-apt-carbon.pl         perl    generates a shell script to replicate your
-                              debian system, then uploads it to a pastebin
-colortheme            sh      shows terminal colors
-cpu-gov               perl    sets CPU governor to "performance" if you are
-                              running on AC power, and "powersave" if you
-                              are on battery power
-dwm-status            perl    sets the dwm "status bar"; add this script to
-                              your $HOME/.xinitrc before dwm
-gather                perl    gathers scripts from my bin
-ipad                  perl    shows your interface's IP address, and your
-                              router's address
-kernel-deb            sh      run after "make menuconfig" to build debian 
-                              kernel packages
-media-sync            perl    eases rsyn procedure
-percent-error         perl    calculates % error from user input
-plcalc                perl    simple command line calculator
-scrot-info            sh      prints some info and calls scrot
-standard-deviation    perl    calculates SD from user input
-sysstats              perl    prints various system stats; helpful for
-                              constructing a screen status
-tint2theme            perl    tint2 theme switcher
-word-search           perl    takes the first command line argument as
-                              a pattern and searches your dictionary
-                              for it
-xdeftheme             perl    Xdefaults switcher
+apin                    perl    Refuse to use "sudo aptitude ...".
+
+apt-carbon              perl    Generates a shell script to replicate your
+                                debian system, then uploads it to a pastebin.
+
+colortheme              sh      Shows terminal colors.
+
+cpu-gov                 perl    Sets CPU governor to "performance" if you are
+                                running on AC power, and "powersave" if you
+                                are on battery power. Requires acpi.
+
+dwm-status              perl    Provides several functions for displaying
+                                system info in the dwm "status bar"; add this
+                                script to your $HOME/.xinitrc before dwm.
+
+file-rename             perl    Sensibly renames files with problematic chars.
+
+forkbomb                perl    An example of obfuscated perl code. Doesn't
+                                actually work.
+
+gather                  perl    Gathers scripts from my bin.
+
+ipad                    perl    Shows your interface's IP address, and your
+                                router's address.
+
+kernel-deb              sh      Run after "make menuconfig" to build Debian
+                                kernel packages.
+
+ladj                    perl    Tool for generating an English Wiktionary
+                                entry for 1st declension Latin adjectives.
+
+mailinate               perl    Generates a "pretty random" 12-char string to
+                                be used as a Mailinator inbox.
+
+media-sync              perl    Eases rsync procedure.
+
+nvidia-installer        perl    Script that can install the Nvidia Xorg driver
+                                either through the Nvidia binary (with custom
+                                args) or the Debian way.
+
+nvidia_glx_fix          perl    Fixes Debian's pesky behavior of overwriting a
+                                glx file that the Nvidia driver needs
+
+peet                    perl    Obsolete tweet script.
+
+percent-error           perl    Calculates % error from user input.
+
+pidgin_eval             perl    Pidgin plugin that allows you to evalute some
+                                shell command and print its output in the
+                                conversation window.
+
+pidgin_perl             perl    Pidgin plugin that allows you to evaluate some
+                                Perl code and print its output in the 
+                                conversation window.
+
+pidgin_quodlibet        perl    Pidgin plugin that prints what's playing in
+                                Quod Libet.
+
+pl                      perl    Saves typing when running Perl one-liners.
+
+
+plcalc                  perl    Simple command line calculator. Uses eval,
+                                and only a minimal safety net. Easy to extend
+                                with custom vars and functions.
+
+rmrf                    perl    Another example of obfuscated code. use at your
+                                own risk.
+
+rua                     perl    Regular user aptitude script. Better than
+                                sudo.
+
+scrot-info              sh      Prints some info and calls scrot.
+
+standard-deviation      perl    Calculates SD from user input.
+
+sysstats                perl    Prints various system stats; helpful for
+                                constructing a screen status.
+
+thunar-edit             perl    Choses which program to open files with based
+                                on file extensions.
+
+tint2theme              perl    tint2 theme switcher.
+
+urxvt-icon-updater      perl    Fixes urxvt's joke of an icon in Debian.
+
+wifi-switch             perl    Uses interfaces to switch between frequently
+                                used wireless networks.
+
+word-search             perl    Takes the first command line argument as
+                                a pattern and searches your dictionary
+                                for it.
+
+xdeftheme               perl    Xdefaults switcher.
 
