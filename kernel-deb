@@ -1,9 +1,0 @@
-#!/bin/sh
-#run this after configuration to build kernel debs
-MAKEFLAGS=""
-make-kpkg clean
-time fakeroot make-kpkg         \
- --append-to-version "-custom"  \
- --revision "$(date +"%Y%m%d")" \
- --initrd                       \
- kernel_image kernel_headers

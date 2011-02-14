@@ -1,19 +1,22 @@
 #!/usr/bin/perl -w
-use strict; 
-use autodie; 
+use strict;
+use autodie;
+use AptPkg::Cache;                # debian: libapt-pkg-perllibapt-pkg-perl
 use List::MoreUtils qw(natatime); # debian: liblist-moreutils-perl
 
-# dbbolton 
-# danielbarrettbolton@gmail.com
+# github.com/dbbolton
 
+my $cache = AptPkg::Cache->new;
 open(my $out, ">",  "apt-carbon.sh");
 
-print $out "#!/bin/sh\n".
- 		   "aptitude update && aptitude safe-upgrade\n".
- 		   "aptitude install -P ";
+print $out <<'EOF';
+#!/bin/sh
+aptitude update && aptitude safe-upgrade
+aptitude install -P
+EOF
 
 my @pkg_list;
-foreach (split "\n", `dpkg -l`) {
+for (split "\n", `dpkg -l`) {
 	if (/^i/) {
 		my $name = (split ' ', $_)[1];
 		push @pkg_list, $name;
@@ -26,18 +29,25 @@ while (my @vals = $j->()) {
 }
 print $out " \n# end of apt-carbon.sh";
 
-my $upload = '';
-if ( ! (`apt-cache policy curl` =~ /\(none\)/)) {
+# Pasting ###################################################################
+
+# old, dirty form that doesn't use AptPkg::Cache
+# if ( ! (`apt-cache policy curl` =~ /\(none\)/))
+
+if ( $cache->{'curl'}->{'CurrentState'} eq 'Installed' ) {
 	print "Using curl...\n";
 	system "cat apt-carbon.sh | curl -F 'sprunge=<-' http://sprunge.us";
 }
-elsif (! (`apt-cache policy pastebinit` =~ /\(none\)/)) {
+
+elsif ( $cache->{'pastebinit'}->{'CurrentState'} eq 'Installed' ) {
 	print "Using pastebinit...\n";
+    system "pastebinit apt-carbon.sh";
 }
 else {
 	print "Automatic upload failed: Neither curl nor pastebinit is installed.\n".
 		  "Your script is located at ./apt-carbon.sh\n";
 }
 
-system "chmod 744 apt-carbon.sh";
+chmod 0744, $out;
 close $out;
+
