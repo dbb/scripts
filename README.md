@@ -9,14 +9,14 @@ those who care what they are).
 * **apin.pl** - avoids pitfalls in running aptitude through **su -c**.  
 
 * **apt-carbon.pl** - generates a shell script to duplicate a Debian system  
-                      easily.
+easily.
 
 * **cpu-gov.pl** - decides which CPU governor and implements it based on power  
-                   source.  
+source.  
 
 * **dwn-status.pl** - provides several functions for displaying system info  
-                      in the dwm "status bar"; add this script to your  
-                      **~/.xinitrc** before dwm.  
+in the dwm "status bar"; add this script to your  
+**~/.xinitrc** before dwm.  
   
 * **file-rename.pl** - sensibly renames files with problematic characters.  
   
