@@ -1,5 +1,5 @@
 # dbbolton's scripts
-<https://github.com/dbbolton/scripts>
+<https://github.com/dbbolton/scripts/>
 
 This repository is an eclectic collection of scripts that typically populate  
 my ~/bin. Most are written in Perl, but there are some Shell and Vim scripts  
