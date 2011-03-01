@@ -1,5 +1,7 @@
 #!/usr/bin/perl
+use 5.010;
 use strict;
+use String::ShellQuote;
 use warnings;
 
 my $args     = '-P ';
@@ -14,18 +16,23 @@ for (@ARGV) {
     elsif ( /^[~?]/ ) {
         $pattern .= $_;
     }
-    elsif ( /^[\w-.]+$/ ) {
+    elsif ( /^[\w\-\.=]+$/ ) {
         $packages .= $_ . ' ';
     }
 
 } # end of @ARGV loop
 
-my $cmd = "aptitude install ";
-$cmd   .=   $args       . ' ' if $args;
-$cmd   .=   $packages   . ' ' if $packages;
-$cmd   .= "'$pattern'"  . ' ' if $pattern;
+my $cmd = 'aptitude install ';
+$cmd   .= $args        . ' ' if $args;
+$cmd   .= $packages    . ' ' if $packages;
+$cmd   .= "'$pattern'" . ' ' if $pattern;
 
-print "\n$cmd\n\n";
+my $quoted  = shell_quote $cmd;
+my $su_call = 'su -c ' . $quoted . ' root';
 
-system "su root -c \"$cmd\" ";
+say "$su_call";
+
+system " $su_call ";
+
+exit 0;
 
