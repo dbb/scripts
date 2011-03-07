@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 use 5.010;
 use strict;
 use String::ShellQuote;
@@ -29,6 +29,8 @@ $cmd   .= "'$pattern'" . ' ' if $pattern;
 
 my $quoted  = shell_quote $cmd;
 my $su_call = 'su -c ' . $quoted . ' root';
+
+$su_call =~ s/\s+/\ /g;
 
 say "$su_call";
 
