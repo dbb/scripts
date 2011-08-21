@@ -1,0 +1,162 @@
+#!/usr/bin/env perl
+use 5.010;
+use autodie;
+use File::Copy;
+use File::Find;
+use POSIX qw(strftime);
+
+# t2t - command-line tint2 theme switching utility
+# https://github.com/dbb
+
+# global vars ###################################
+my $config_files = [];
+my $limit;
+my $path    = "$ENV{HOME}/.config/tint2";
+my $time    = strftime "%s", localtime;
+my $tintpid = `pidof tint2`;
+my $version = 0.1;
+my $use_no_file = 1; # start out assuming we need to look for configs
+my $use_write   = 0;
+
+# end global vars ###############################
+
+if ( @ARGV ) {
+    for ( @ARGV ) {
+        if ( /^--version$/ or /^-v$/ ) {
+            &version;
+        }
+        elsif ( /^--help$/ or /^-h$/ ) {
+            &help;
+        }
+        elsif ( /^--write$/ or /^-w$/ ) {
+            $use_write = 1;
+        }
+
+        elsif ( -f "$path/$_" ) {
+            # the user gave us a file, so we don't need to find configs
+            $use_no_file = 0;
+            &start( "$path/$_" );
+        }
+        else {
+            say "Bad option: '$_'\n" . "(Maybe the file doesn't exist.)";
+        }
+    } ## end for ( @ARGV )
+} ## end if ( @ARGV )
+
+&no_file if $use_no_file;
+
+sub no_file {
+    &get_files;
+    &list_files;
+    &pick_theme;
+}
+
+sub get_files {
+    find( \&wanted, $path );
+    $config_files = [ sort @$config_files ];
+}
+
+sub list_files {
+    my $i = 0;
+    for ( @$config_files ) {
+        s/$path\///;
+        say "$i\t$_";
+        $i++;
+    }
+    $limit = $i - 1;
+} ## end sub list_files
+
+sub pick_theme {
+    my $theme_id;
+    print "Enter theme number (0-$limit): ";
+    chomp( $theme_id = <STDIN> );
+    if ( $theme_id =~ /^\d+$/ ) {
+        &confirm( $theme_id );
+    }
+    else {
+        say "Invalid number.";
+        &pick_theme;
+    }
+} ## end sub pick_theme
+
+sub confirm {
+    my $id = shift;
+    my $ans;
+    print "Really use theme '$$config_files[$id]'? (y/n) ";
+    chomp( $ans = <STDIN> );
+    if ( $ans =~ /^y$/i ) {
+        &start( "$path/$$config_files[ $id ]" );
+    }
+    elsif ( $ans =~ /^n$/i ) {
+        say "Aborting.";
+        exit;
+    }
+    else {
+        say "Invalid response.";
+        &confirm( $id );
+    }
+} ## end sub confirm
+
+
+sub wanted {
+    if ( -f and m/^[^\.][^~]*$/ ) {
+        push @$config_files, $File::Find::name
+            unless $File::Find::name =~ /\.(orig|bak|old)$/;
+    }
+} ## end sub wanted
+
+sub start {
+    my $file = shift;
+    say "file $file";
+    &write( $file ) if $use_write;
+    system "kill $tintpid" if $tintpid;
+    defined( my $pid = fork );
+    unless ( $pid ) {
+        close( STDIN );
+        close( STDOUT );
+        close( STDERR );
+        exec "tint2 -c $file";
+        exit 0;
+    } ## end unless ( $pid )
+} ## end sub start
+
+sub write {
+    my $file = shift;
+    copy "$path/tint2rc", "$path/tint2rc_$time";
+    copy $file, "$path/tint2rc";
+}
+
+sub help {
+    print <<EOF;
+Possible options:
+-h    --help       print this help text and exit
+-v    --version    print version information
+-w    --write      write the chosen config to \$HOME/.config/tint2/tint2rc
+      [FILE]       launch `tint -c FILE`
+
+If FILE is specified as an argument, it must be a full path or the name of a
+file in the current directory (\$PWD).
+
+If -w/--write and FILE are both given ar arguments, -w/--write *must* be given
+first.
+
+If no options are given, tint2theme will try to find all config files in 
+\$path (default: \$HOME/.config/tint2) and ask the user to choose a config
+file. Then, `tint2 -c FILE` is launched.
+
+This program does *not* move or overwrite \$HOME/.config/tint2/tint2rc by
+default. If the -w/--write option is given, tint2rc will be backed up and the
+chosen theme will be copied to tint2rc. The backup file will be called
+'tint2rc_NUMBER' where NUMBER is the Unix time when this program was called
+( see '%s' in `man date` ).
+
+Direct all issues/requests to https://github.com/dbb
+NOT the tint2 developers.
+EOF
+
+exit;
+} ## end sub help
+
+sub version {
+    say "tint2theme version $version\n" . "http://github.com/dbb\n";
+}
