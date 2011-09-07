@@ -35,7 +35,7 @@ for my $arg ( @ARGV ) {
 
 
 sub help {
-    print << "EOF";
+    print << 'EOF';
 Usage:
 % rpn_calc 'expr1' 'expr2'
 
