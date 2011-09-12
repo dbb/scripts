@@ -1,0 +1,20 @@
+#!/usr/bin/env perl
+use 5.010;
+use strict;
+use String::ShellQuote;
+use warnings;
+
+my $args = shell_quote @ARGV;
+
+# some "aliases"
+$args =~ s/\s*apin\s+/aptitude install -P /;
+$args =~ s/\s*appg\s+/aptitude purge -P /;
+$args =~ s/\s*aprm\s+/aptitude remove -P /;
+
+my $qtd = shell_quote $args;
+my $su_call = 'su -l -c ' . $qtd . ' root';
+
+say $su_call;
+system $su_call;
+exit 0;
+
