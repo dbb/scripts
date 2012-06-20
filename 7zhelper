@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use 5.010;
+
+print "Path (relative or full) of dir to compress: ";
+chomp( my $in = <STDIN> );
+die "Invalid input" unless -d $in;
+
+print "Ouput file: ";
+chomp( my $out = <STDIN> );
+
+print "Compression [0-9]: ";
+chomp( my $comp = <STDIN> );
+
+print "Split? [y/n] ";
+my $max = 0;
+chomp( my $split = <STDIN> );
+if ( $split =~ /y/i ) {
+    print "Max part size [MB]: ";
+    chomp( $max = <STDIN> );
+}
+
+my $cmd = "7z a -t7z ";
+$cmd .= "-v${max}m " if $max > 0;
+$cmd .= "$out $in -mx${comp}";
+
+say "\n\t$cmd\n";
+
