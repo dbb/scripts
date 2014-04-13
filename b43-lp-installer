@@ -1,0 +1,79 @@
+#!/bin/sh
+
+# b43-lp-installer
+# https://github.com/dbb
+#
+# Requirements: 
+# * Broadcom Low Power wireless card
+# * Kernel newer than 2.6.32
+# * Root permissions
+#
+# This script installs firmware for supported Broadcom b43 low power devices.
+# Most of it was ripped out of the firmware-b43-lpphy-installer Debian
+# package, but it is meant for use on other distros.
+# 
+# A quick-n-dirty way to tell if you need this firmware is to run:
+#     lspci | grep LP-PHY
+# But a more sophisticated test is included in the script. If you want to 
+# install the firmware even if the test fails, just delete the relevant 
+# lines.
+
+# check chip
+supported=0
+pci=`lspci -n | grep -o "14e4:[1234567890abcdef]\+"` || true
+
+if [ -n "$pci" ]; then
+	for device in $pci; do
+		device_id=`echo $device | cut -d: -f2`
+		case $device_id in
+                4315)
+			supported=1
+            echo "Found supported device: $device"
+			break
+		;;
+		esac	
+	done
+fi
+
+if [ "$supported" = 0 ]; then
+	echo "No supported card found."
+	echo "Use proper b43 or b43legacy firmware."
+	echo "Aborting."
+	exit 1
+fi
+
+
+mkdir b43-lp-tmp
+cd b43-lp-tmp
+
+if [ -f $( which curl ) ]; then
+    curl -LO http://downloads.openwrt.org/sources/broadcom-wl-4.178.10.4.tar.bz2
+elif [ -f $( which wget ) ]; then
+    wget http://downloads.openwrt.org/sources/broadcom-wl-4.178.10.4.tar.bz2
+else
+    echo "No downloader found. Please instal curl or wget."
+    exit 1
+fi
+
+
+tar xjf broadcom-wl-4.178.10.4.tar.bz2
+cd broadcom-wl-4.178.10.4/linux
+
+if [ -d /lib/firmware/b43 ]; then
+   echo "Deleting old extracted firmware..."
+   rm -rf /lib/firmware/b43
+fi
+if [ ! -d /lib/firmware/b43 ]; then
+   echo "Creating new firmware directory..."
+        mkdir -p /lib/firmware/b43
+fi
+
+echo "Installing firmware..."
+b43-fwcutter -w /lib/firmware wl_apsta.o
+
+echo "Cleaning up..."
+cd ..
+rm -rf b43-lp-tmp
+
+echo "Finished installing b43 firmware."
+exit 0
