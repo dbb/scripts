@@ -16,4 +16,4 @@ mount -o bind /dev     $dir/dev
 mount -o bind /dev/pts $dir/dev/pts
 mount -o bind /sys     $dir/sys  
 
-chroot $dir /bin/zsh4
+chroot $dir /bin/zsh
