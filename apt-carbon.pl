@@ -4,7 +4,29 @@ use autodie;
 use AptPkg::Cache;                # debian: libapt-pkg-perllibapt-pkg-perl
 use List::MoreUtils qw(natatime); # debian: liblist-moreutils-perl
 
-# github.com/dbbolton
+#
+# apt-carbon.pl
+# github.com/dbb
+#
+# Dependencies: Perl >5.10, libapt-pkg-perllibapt-pkg-perl, liblist-moreutils-perl
+#
+# What it does:
+#    - makes a list of all installed packages
+#    - generates a shell script (./apt-carbon.sh) that can be used to install that list of packages
+#    - attempts to upload that shell script to sprunge via curl or to pastebin with pastebinit
+#    - prints out the URL of the (successfully) uploaded script
+#
+# Why you would use it:
+#    - to make a second OS that is equavalent only at the package level
+#      without having to copy any files yourself
+# 
+# Notes:
+#    - Update the original machine first
+#    - Remove any packages you don't want/need on the new system
+#    - Always backup any non-package files you want to keep (e.g. /home)
+#    - Use the same OS release between installs
+#
+#
 
 my $cache = AptPkg::Cache->new;
 open(my $out, ">",  "apt-carbon.sh");
